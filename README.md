@@ -1,97 +1,125 @@
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
+# 电影App
 
-# Getting Started
+这是一个使用React Native开发的电影应用，提供电影列表浏览、搜索和详情查看功能。
 
-> **Note**: Make sure you have completed the [Set Up Your Environment](https://reactnative.dev/docs/set-up-your-environment) guide before proceeding.
+## 功能特点
 
-## Step 1: Start Metro
+- 🎬 电影列表展示，包含电影标题、海报、发布日期
+- 🔍 电影搜索功能
+- 📋 电影详情页面，展示完整信息
+- 🎨 优雅的UI设计和流畅的用户体验
+- ⚠️ 完善的错误处理机制
+- 🌐 使用The Movie Database (TMDb) API获取数据
 
-First, you will need to run **Metro**, the JavaScript build tool for React Native.
+## 技术栈
 
-To start the Metro dev server, run the following command from the root of your React Native project:
+- **框架**: React Native 0.82.1
+- **语言**: TypeScript
+- **状态管理**: Redux Toolkit
+- **导航**: React Navigation 6.x
+- **网络请求**: Axios
+- **UI组件**: React Native内置组件
 
-```sh
-# Using npm
-npm start
+## 安装与运行
 
-# OR using Yarn
-yarn start
+### 1. 环境要求
+
+- Node.js >= 20
+- npm 或 yarn
+- React Native CLI
+- Xcode (iOS开发)
+- Android Studio (Android开发)
+
+### 2. 安装依赖
+
+```bash
+# 安装依赖
+npm install
+
+# iOS特有依赖
+cd ios && pod install && cd ..
 ```
 
-## Step 2: Build and run your app
+### 3. 配置API密钥
 
-With Metro running, open a new terminal window/pane from the root of your React Native project, and use one of the following commands to build and run your Android or iOS app:
+1. 在 [The Movie Database](https://www.themoviedb.org/) 注册账号并获取API密钥
+2. 打开 `src/services/config.ts` 文件，将 `YOUR_TMDB_API_KEY` 替换为您的实际API密钥
 
-### Android
-
-```sh
-# Using npm
-npm run android
-
-# OR using Yarn
-yarn android
+```typescript
+export const API_CONFIG = {
+  API_KEY: '您的API密钥', // 替换为实际的API密钥
+  BASE_URL: 'https://api.themoviedb.org/3',
+  IMAGE_BASE_URL: 'https://image.tmdb.org/t/p',
+};
 ```
 
-### iOS
+### 4. 运行项目
 
-For iOS, remember to install CocoaPods dependencies (this only needs to be run on first clone or after updating native deps).
-
-The first time you create a new project, run the Ruby bundler to install CocoaPods itself:
-
-```sh
-bundle install
-```
-
-Then, and every time you update your native dependencies, run:
-
-```sh
-bundle exec pod install
-```
-
-For more information, please visit [CocoaPods Getting Started guide](https://guides.cocoapods.org/using/getting-started.html).
-
-```sh
-# Using npm
+```bash
+# iOS
 npm run ios
 
-# OR using Yarn
-yarn ios
+# Android
+npm run android
+
+# 启动开发服务器
+npm start
 ```
 
-If everything is set up correctly, you should see your new app running in the Android Emulator, iOS Simulator, or your connected device.
+## 项目结构
 
-This is one way to run your app — you can also build it directly from Android Studio or Xcode.
+```
+src/
+├── components/     # 可复用组件
+├── navigation/     # 导航配置
+├── redux/          # Redux状态管理
+│   ├── slices/     # Redux切片
+│   ├── store.ts    # Redux store配置
+│   └── hooks.ts    # 自定义Redux hooks
+├── screens/        # 页面组件
+│   ├── MovieListScreen.tsx     # 电影列表页
+│   └── MovieDetailScreen.tsx   # 电影详情页
+└── services/       # 服务层
+    └── config.ts   # API配置
+```
 
-## Step 3: Modify your app
+## 主要功能说明
 
-Now that you have successfully run the app, let's make changes!
+### 电影列表页面
+- 进入页面自动加载热门电影列表
+- 支持下拉刷新（待实现）
+- 提供搜索框，可根据电影标题进行搜索
+- 电影列表项支持点击进入详情页面
 
-Open `App.tsx` in your text editor of choice and make some changes. When you save, your app will automatically update and reflect these changes — this is powered by [Fast Refresh](https://reactnative.dev/docs/fast-refresh).
+### 电影详情页面
+- 展示电影海报、标题、发布日期、评分
+- 显示电影完整简介
+- 支持返回上一页
 
-When you want to forcefully reload, for example to reset the state of your app, you can perform a full reload:
+### 错误处理
+- 网络请求失败时显示友好的错误提示
+- 加载状态显示加载动画
+- 空数据状态显示提示信息
 
-- **Android**: Press the <kbd>R</kbd> key twice or select **"Reload"** from the **Dev Menu**, accessed via <kbd>Ctrl</kbd> + <kbd>M</kbd> (Windows/Linux) or <kbd>Cmd ⌘</kbd> + <kbd>M</kbd> (macOS).
-- **iOS**: Press <kbd>R</kbd> in iOS Simulator.
+## 性能优化
 
-## Congratulations! :tada:
+- 使用React.memo避免不必要的重渲染
+- 图片使用CDN加载优化
+- 合理的组件拆分和代码组织
 
-You've successfully run and modified your React Native App. :partying_face:
+## 测试
 
-### Now what?
+```bash
+# 运行测试
+npm test
+```
 
-- If you want to add this new React Native code to an existing application, check out the [Integration guide](https://reactnative.dev/docs/integration-with-existing-apps).
-- If you're curious to learn more about React Native, check out the [docs](https://reactnative.dev/docs/getting-started).
+## 注意事项
 
-# Troubleshooting
+- 请确保在实际使用前配置有效的TMDb API密钥
+- API调用有频率限制，请合理使用
+- 在生产环境中，建议使用环境变量来管理API密钥等敏感信息
 
-If you're having issues getting the above steps to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
+## License
 
-# Learn More
-
-To learn more about React Native, take a look at the following resources:
-
-- [React Native Website](https://reactnative.dev) - learn more about React Native.
-- [Getting Started](https://reactnative.dev/docs/environment-setup) - an **overview** of React Native and how setup your environment.
-- [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
-- [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
-- [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
+MIT
