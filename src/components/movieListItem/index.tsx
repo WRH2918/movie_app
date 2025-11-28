@@ -18,7 +18,7 @@ const POSTER_HEIGHT = POSTER_WIDTH * 1.5;
 
 interface MovieListItemProps {
   movie: Result;
-  onPress?: (movie: Result) => void;
+  onPress?: (movieId: number) => void;
   isLoading?: boolean;
   key?: string | number;
 }
@@ -36,7 +36,7 @@ const MovieListItem: React.FC<MovieListItemProps> = ({
   const [imageError, setImageError] = useState(false);
   const handlePress = () => {
     if (onPress) {
-      onPress(movie);
+      onPress(movie.id);
     } else {
       // 如果没有提供onPress回调，显示电影信息提示
       Alert.alert(

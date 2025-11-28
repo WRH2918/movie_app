@@ -1,5 +1,9 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { fetchPopularMovies, searchMovies } from '../thunks/movieThunk';
+import {
+  fetchMovieDetails,
+  fetchPopularMovies,
+  searchMovies,
+} from '../thunks/movieThunk';
 import { MovieListResponse, Result } from '../../types/movie';
 
 import { MovieState } from '../../types/movie';
@@ -7,7 +11,6 @@ import { MovieState } from '../../types/movie';
 // 初始状态
 const initialState: MovieState = {
   popularMovies: [],
-  currentMovie: null,
   loading: false,
   error: null,
   searchResults: [],
@@ -111,19 +114,6 @@ const movieSlice = createSlice({
         state.loading = false;
         state.error = action.payload as string;
       });
-    // // 处理获取电影详情
-    // .addCase(fetchMovieDetails.pending, (state) => {
-    //   state.loading = true;
-    //   state.error = null;
-    // })
-    // .addCase(fetchMovieDetails.fulfilled, (state, action: PayloadAction<Movie>) => {
-    //   state.loading = false;
-    //   state.currentMovie = action.payload;
-    // })
-    // .addCase(fetchMovieDetails.rejected, (state, action) => {
-    //   state.loading = false;
-    //   state.error = action.payload as string;
-    // })
   },
 });
 

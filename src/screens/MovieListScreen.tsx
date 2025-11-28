@@ -16,8 +16,11 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import MovieListItem from '../components/movieListItem';
 import { Result } from '../types/movie';
 import { RootState } from '../redux/store';
+import { useNavigation } from '@react-navigation/native';
+import { ScreenNavigationProp } from '../routes';
 
 const MovieListScreen: React.FC = () => {
+  const navigation = useNavigation<ScreenNavigationProp<'MovieList'>>();
   const dispatch = useAppDispatch();
   const moviesState = useAppSelector((state: RootState) => state.movies || {});
   const popularMovies = moviesState.popularMovies || [];
@@ -56,11 +59,11 @@ const MovieListScreen: React.FC = () => {
   }, [dispatch, searchQuery]);
 
   const handleMoviePress = (movieId: number) => {
-    // navigateToMovieDetail(movieId);
+    navigation.navigate('MovieDetail', { movieId });
   };
 
   const renderMovieItem = ({ item }: { item: Result }) => {
-    return <MovieListItem movie={item} />;
+    return <MovieListItem movie={item} onPress={handleMoviePress} />;
   };
 
   const moviesToShow = searchQuery ? searchResults : popularMovies;

@@ -47,24 +47,28 @@ export const fetchPopularMovies = createAsyncThunk(
   },
 );
 
-// // 获取电影详情的异步thunk
-// export const fetchMovieDetails = createAsyncThunk(
-//   'movies/fetchDetails',
-//   async (movieId: number, { rejectWithValue }) => {
-//     try {
-//       const response = await fetch(
-//         `${BASE_URL}/movie/${movieId}?api_key=${API_KEY}&language=zh-CN`
-//       );
-//       if (!response.ok) {
-//         throw new Error(`API error: ${response.status}`);
-//       }
-//       const data = await response.json();
-//       return data;
-//     } catch (error: any) {
-//       return rejectWithValue(error.message || 'Failed to fetch movie details');
-//     }
-//   }
-// );
+// 获取电影详情的异步thunk
+export const fetchMovieDetails = createAsyncThunk(
+  'movieDetail/fetchDetails',
+  async (movieId: number, { rejectWithValue }) => {
+    console.log('movieId', movieId);
+    try {
+      const response = await httpClient.get(`/movie/${movieId}`, {
+        params: {
+          language: 'zh-CN',
+        },
+      });
+      if (response.status !== 200) {
+        throw new Error(`API error: ${response.status}`);
+      }
+      console.log('response', response);
+      const data = await response.data;
+      return data;
+    } catch (error: any) {
+      return rejectWithValue(error.message || 'Failed to fetch movie details');
+    }
+  },
+);
 
 // 搜索电影的异步thunk
 export const searchMovies = createAsyncThunk(
