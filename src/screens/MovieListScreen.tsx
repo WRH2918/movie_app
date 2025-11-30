@@ -118,6 +118,7 @@ const MovieListScreen: React.FC = () => {
         <TextInput
           style={styles.searchInput}
           placeholder="搜索电影..."
+          numberOfLines={1}
           value={searchInput}
           onChangeText={setSearchInput}
           onSubmitEditing={handleSearch}
@@ -172,10 +173,11 @@ const styles = StyleSheet.create({
     flex: 1,
     height: 40,
     borderWidth: 1,
+    lineHeight: 20,
     borderColor: '#e0e0e0',
     borderRadius: 20,
     paddingHorizontal: 16,
-    fontSize: 16,
+    fontSize: 14,
   },
   clearButton: {
     marginLeft: 8,

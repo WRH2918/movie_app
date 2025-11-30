@@ -101,3 +101,25 @@ export const searchMovies = createAsyncThunk(
     }
   },
 );
+
+// 电影演员的异步thunk
+export const fetchMovieCredits = createAsyncThunk(
+  'movieDetail/credits',
+  async (movieId: number, { rejectWithValue }) => {
+    try {
+      const response = await httpClient.get(`movie/${movieId}/credits`, {
+        params: {
+          language: 'zh-CN',
+        },
+      });
+
+      if (response.status !== 200) {
+        throw new Error(`API error: ${response.status}`);
+      }
+      const data = await response.data;
+      return data;
+    } catch (error: any) {
+      return rejectWithValue(error.message || 'Failed to fetch movie credits');
+    }
+  },
+);

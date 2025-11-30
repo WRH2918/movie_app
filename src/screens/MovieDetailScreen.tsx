@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import {
   View,
   Text,
@@ -6,46 +6,69 @@ import {
   StyleSheet,
   Image,
   ActivityIndicator,
-  Alert,
   TouchableOpacity,
 } from 'react-native';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
-import { fetchMovieDetails } from '../redux/thunks/movieThunk';
+import {
+  fetchMovieCredits,
+  fetchMovieDetails,
+} from '../redux/thunks/movieThunk';
 import { MovieDetailResponse } from '../types/movie';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { ScreenNavigationProp, ScreenRouteProp } from '../routes';
 import { RootState } from '../redux/store';
-// import { fetchMovieDetails, Movie } from '../redux/slices/movieSlice';
 
 const MovieDetailScreen: React.FC = () => {
   const navigation = useNavigation<ScreenNavigationProp<'MovieDetail'>>();
   const { movieId } = useRoute<ScreenRouteProp<'MovieDetail'>>().params;
-  // 模拟电影ID，实际应该从路由参数获取
-  // const [movieId] = useState<number>(1); // 默认电影ID为1
   const dispatch = useAppDispatch();
-  // 修复类型问题，添加默认值和类型断言
   const moviesState = useAppSelector(
     (state: RootState) => state.movieDetail || {},
   );
   const currentMovie: MovieDetailResponse | null =
     moviesState.currentMovie || null;
+  const credits = moviesState.credits;
   const loading = moviesState.loading || false;
-  const error = moviesState.error || null;
 
   useEffect(() => {
     // 获取电影详情
     dispatch(fetchMovieDetails(movieId));
+    // 获取电影演员
+    dispatch(fetchMovieCredits(movieId));
   }, [dispatch, movieId]);
 
-  useEffect(() => {
-    // 处理错误
-    if (error) {
-      Alert.alert('错误', error);
+  const creditsListRender = useCallback(() => {
+    const cast = credits?.cast || [];
+    if (cast.length === 0) {
+      return null;
     }
-  }, [error]);
 
-  // handleBack函数已经在上面定义
+    return (
+      <View style={styles.section}>
+        <Text style={styles.sectionTitle}>演员</Text>
+        <ScrollView
+          style={styles.creditList}
+          horizontal
+          showsHorizontalScrollIndicator={false}
+        >
+          {cast.map(actor => (
+            <View key={actor.id} style={styles.creditItem}>
+              <Image
+                source={{
+                  uri: `https://media.themoviedb.org/t/p/w276_and_h350_face/${actor.profile_path}`,
+                }}
+                style={styles.actorImage}
+              />
+              <Text style={styles.actorName}>{actor.name}</Text>
+              <Text style={styles.actorCharacter}>{actor.character}</Text>
+            </View>
+          ))}
+        </ScrollView>
+      </View>
+    );
+  }, [credits]);
 
+  // 条件返回 - 必须在所有Hooks调用之后
   if (loading) {
     return (
       <View style={styles.loadingContainer}>
@@ -81,9 +104,8 @@ const MovieDetailScreen: React.FC = () => {
           style={styles.backButtonTop}
           onPress={() => navigation.goBack()}
         >
-          {/* <Text style={styles.backButtonTopText}>←</Text> */}
           <Image
-            source={require("../assets/imgs/back.png")}
+            source={require('../assets/imgs/back.png')}
             style={styles.backButtonTopImage}
             tintColor={'#fff'}
           />
@@ -120,10 +142,17 @@ const MovieDetailScreen: React.FC = () => {
             ))}
           </View>
 
-          <View style={styles.section}>
-            <Text style={styles.sectionTitle}>简介</Text>
-            <Text style={styles.overview}>{currentMovie.overview}</Text>
-          </View>
+          {currentMovie.overview && (
+            <View style={styles.section}>
+              <Text style={styles.sectionTitle}>简介</Text>
+              <Text style={styles.overview} numberOfLines={5}>
+                {currentMovie.overview}
+              </Text>
+            </View>
+          )}
+
+          {/* 演员列表 */}
+          {creditsListRender()}
         </View>
       </ScrollView>
     </View>
@@ -266,6 +295,36 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: '#666',
     marginBottom: 12,
+  },
+  creditItem: {
+    marginRight: 12,
+    borderRadius: 6,
+    borderWidth: 1,
+    borderColor: '#e0e0e0',
+    overflow: 'hidden',
+    width: 120,
+    paddingBottom: 8,
+  },
+  actorImage: {
+    width: 120,
+    height: 133,
+  },
+  actorName: {
+    fontSize: 14,
+    fontWeight: 'bold',
+    color: '#000',
+    marginLeft: 8,
+    marginBottom: 4,
+    marginTop: 4,
+  },
+  actorCharacter: {
+    fontSize: 12,
+    color: '#666',
+    marginLeft: 8,
+  },
+  creditList: {
+    flexWrap: 'wrap',
+    flexDirection: 'row',
   },
 });
 

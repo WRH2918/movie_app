@@ -41,6 +41,7 @@ export interface MovieDetailState {
   currentMovie: MovieDetailResponse | null;
   loading: boolean;
   error: string | null;
+  credits: Credits | null;
 }
 
 // 电影详情
@@ -93,4 +94,36 @@ export interface SpokenLanguage {
   english_name: string;
   iso_639_1: string;
   name: string;
+}
+
+export interface Credits {
+  id: number;
+  cast: Cast[];
+  crew: Cast[];
+}
+
+export interface Cast {
+  adult: boolean;
+  gender: number;
+  id: number;
+  known_for_department: Department;
+  name: string;
+  original_name: string;
+  popularity: number;
+  profile_path: null | string;
+  cast_id?: number;
+  character?: string;
+  credit_id: string;
+  order?: number;
+  department?: Department;
+  job?: string;
+}
+
+export enum Department {
+  Acting = 'Acting',
+  Art = 'Art',
+  Directing = 'Directing',
+  Editing = 'Editing',
+  Production = 'Production',
+  Writing = 'Writing',
 }
