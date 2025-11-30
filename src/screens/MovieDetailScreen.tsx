@@ -57,6 +57,7 @@ const MovieDetailScreen: React.FC = () => {
                 source={{
                   uri: `https://media.themoviedb.org/t/p/w276_and_h350_face/${actor.profile_path}`,
                 }}
+                resizeMode="cover"
                 style={styles.actorImage}
               />
               <Text style={styles.actorName}>{actor.name}</Text>
